@@ -18,3 +18,6 @@ Route::get('/', function () {
 })->name('homepage');
 
 Route::resource('horses', 'HorseController');
+
+Route::get('horses', 'HorseController@index')->name('horses.index');
+Route::post('horses', 'HorseController@store')->name('horses.store');

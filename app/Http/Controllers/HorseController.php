@@ -15,6 +15,7 @@ class HorseController extends Controller
     public function index()
     {
       $data_horse = Horse::all();
+
       $data = [
         'horses' => $data_horse
       ];
@@ -28,7 +29,7 @@ class HorseController extends Controller
      */
     public function create()
     {
-        //
+      return view('horses.create');
     }
 
     /**
@@ -39,7 +40,23 @@ class HorseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $request->validate([
+        'name' => 'required',
+        'age' => 'required',
+        'breed' => 'required',
+        'gender' => 'required',
+        'owner' => 'required'
+      ]);
+
+      $data = $request->all();
+
+      $horseNew = new Horse();
+      $horseNew->name = $data['name'];
+      $horseNew->age = $data['age'];
+      $horseNew->breed = $data['breed'];
+      $horseNew->gender = $data['gender'];
+      $horseNew->owner = $data['owner'];
+      $horseNew->save();
     }
 
     /**
@@ -51,6 +68,7 @@ class HorseController extends Controller
     public function show($id)
     {
       $horse_sel = Horse::find($id);
+
       if ($horse_sel) {
         $data = [
           'horse' => $horse_sel
