@@ -51,12 +51,12 @@ class HorseController extends Controller
       $data = $request->all();
 
       $horseNew = new Horse();
-      $horseNew->name = $data['name'];
-      $horseNew->age = $data['age'];
-      $horseNew->breed = $data['breed'];
-      $horseNew->gender = $data['gender'];
-      $horseNew->owner = $data['owner'];
+
+      $horseNew->fill($data);
+
       $horseNew->save();
+
+      return redirect()->route('horses.index')->with('status', 'Horse added');
     }
 
     /**
@@ -65,13 +65,11 @@ class HorseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Horse $horse)
     {
-      $horse_sel = Horse::find($id);
-
-      if ($horse_sel) {
+      if ($horse) {
         $data = [
-          'horse' => $horse_sel
+          'horse' => $horse
         ];
         return view('horses.show', $data);
       }
@@ -84,9 +82,15 @@ class HorseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Horse $horse)
     {
-        //
+      if ($horse) {
+        $data = [
+          'horse' => $horse
+        ];
+        return view('horses.edit', $data);
+      }
+      abort('404');
     }
 
     /**
@@ -96,9 +100,20 @@ class HorseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Horse $horse)
     {
-        //
+      $data = $request->all();
+
+      $request->validate([
+        'name' => 'required',
+        'age' => 'required',
+        'breed' => 'required',
+        'gender' => 'required',
+        'owner' => 'required'
+      ]);
+
+      $horse->update($data);
+      return redirect()->route('horses.index', $horse->id)->with('status', 'Data updated');
     }
 
     /**
@@ -107,8 +122,9 @@ class HorseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Horse $horse)
     {
-        //
+      $horse->delete();
+      return redirect()->route('horses.index')->with('status', 'Horse deleted');
     }
 }

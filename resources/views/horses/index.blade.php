@@ -5,6 +5,11 @@
 @section('content')
   <div class="container">
     <h1>Horses in stable</h1>
+    @if (session('status'))
+      <div class="alert alert-success">
+        {{ session('status') }}
+      </div>
+    @endif
     <table class="table">
       <thead>
         <tr>
@@ -26,7 +31,15 @@
             <td>{{ $horse->breed }}</td>
             <td>{{ $horse->gender }}</td>
             <td>{{ $horse->owner }}</td>
-            <td><a href="{{route('horses.show', ['horse'=>$horse->id])}}">Select horse</a></td>
+            <td>
+              <a href="{{route('horses.show', ['horse'=>$horse->id])}}" class="btn btn-info">Info</a>
+              <a href="{{route('horses.edit', ['horse'=>$horse->id])}}" class="btn btn-warning">Edit data</a>
+              <form action="{{route('horses.destroy', $horse->id)}}" method="post" class="d-inline-block">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-danger">Delete</button>
+              </form>
+            </td>
           </tr>
         @endforeach
       </tbody>

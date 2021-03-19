@@ -5,6 +5,15 @@
 @section('content')
   <div class="container">
     <h1>Add your horse</h1>
+    @if ($errors->any())
+      <div class="alert alert-danger">
+        <ul>
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+    @endif
     <form action="{{route('horses.store')}}" method="post">
       @csrf
       @method('POST')
